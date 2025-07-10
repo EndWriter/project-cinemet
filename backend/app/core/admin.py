@@ -5,14 +5,14 @@ from .models import User, Role, Movie, Genre, Director, Actor, Rating, Favorite,
 # Configuration User Admin
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'pseudo', 'first_name', 'last_name', 'role', 'is_active')
+    list_display = ('email', 'username', 'first_name', 'last_name', 'role', 'is_active')
     list_filter = ('role', 'is_active', 'created_at')
-    search_fields = ('email', 'pseudo', 'first_name', 'last_name')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
     ordering = ('email',)
     
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('info dite personnel', {'fields': ('pseudo', 'first_name', 'last_name')}),
+        ('info dite personnel', {'fields': ('username', 'first_name', 'last_name')}),
         ('permission', {'fields': ('is_active', 'is_staff', 'is_superuser', 'role')}),
         ('Date', {'fields': ('last_login', 'created_at')}),
     )
