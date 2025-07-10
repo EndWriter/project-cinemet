@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "app.core",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -75,11 +76,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cinemet_db',  
+        'NAME': 'cinemet_db',
         'USER': 'user',
         'PASSWORD': 'password',
-        'HOST': 'localhost',  
-        'PORT': '5432',        
+        'HOST': 'db', 
+        'PORT': '5432',
     }
 }
 
@@ -101,6 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "core.User"
 
 
 # Internationalization
