@@ -34,7 +34,9 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)           # pour django admin
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    role = models.ForeignKey(           # clé étrangère vers le table Role
+
+    # clé étrangère vers le table Role
+    role = models.ForeignKey(
         Role, 
         on_delete=models.SET_NULL,      # si le rôle est supprimé, l'utilisateur ne le sera pas
         null=True,
