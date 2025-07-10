@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:17  #PostgreSQL
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cinemet_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"  # port SMTP
+      - "8025:8025"  # interface web
+
+  backend:
+    build: ./backend  #partie python
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/cinemet_db
+      - EMAIL_HOST=mailpit
+      - EMAIL_PORT=1025 # port de mailpit
+      - DEBUG=True
+    volumes:
+      - ./backend/app:/app/app # code
+      - ./backend/media:/app/media  # dossier photos (uploads)
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - mailpit
+
+volumes:
+  db_data:
