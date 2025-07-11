@@ -107,12 +107,26 @@ class Movie(models.Model):
     
     def __str__(self):
         return self.title
+
+    #calcule la moyenne des notes pour LE film
+    def calculate_average_rating(self):
+        from .rating import Rating # j'evite les problème de dependance
+        ratings = Rating.objects.filter(movie=self)
+        if ratings.exists():
+            total = sum(rating.rating for rating in ratings)
+            return round(total / ratings.count(), 2)
+        return 0.00
     
+    #met a jour la moyenne des notes du film (fonction appelé dans rating.py, pour re maj si 
+    # une note est ajoutée ou supprimée)
+    def update_average_rating(self):
+        self.average_rating = self.calculate_average_rating()
+        self.save(update_fields=['average_rating'])
 
 #POSTER
 class Image(models.Model):
     name = models.CharField(max_length=100)
-    # chemin vers dossier 'media/')
+    # chemin vers dossier 'media/'
     url = models.ImageField(upload_to='movies/', max_length=300)
     is_main = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
