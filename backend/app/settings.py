@@ -1,3 +1,8 @@
+# Ajout backend d'authentification par email
+AUTHENTICATION_BACKENDS = [
+    'app.core.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 """
 Django settings for app project.
 

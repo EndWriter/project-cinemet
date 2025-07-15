@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -61,13 +61,13 @@ export default function LoginPage() {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <input
-                id="username"
-                name="username"
+                id="email"
+                name="email"
                 type="text"
                 required
                 className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Nom d'utilisateur"
-                value={formData.username}
+                placeholder="Mail d'utilisateur"
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>

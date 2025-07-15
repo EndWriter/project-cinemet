@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json()
+    const { email, password } = await request.json()
 
     //appel vers le backend Django
-    const response = await fetch(`${process.env.BACKEND_URL}/api/auth/login/`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     })
 
     if (response.ok) {
