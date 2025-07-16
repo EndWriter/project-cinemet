@@ -46,12 +46,24 @@ export default function Navbar() {
         credentials: 'include'
       })
       
-      if (response.ok) {
-        setUser(null)
-        router.push('/login')
-      }
+      // Toujours déconnecter côté client, même si le serveur a une erreur
+      setUser(null)
+      
+      // Forcer la suppression des cookies côté client aussi
+      document.cookie = 'sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      
+      router.push('/login')
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
+      // Même en cas d'erreur, déconnecter côté client
+      setUser(null)
+      
+      // Forcer la suppression des cookies côté client
+      document.cookie = 'sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      
+      router.push('/login')
     }
   }
 

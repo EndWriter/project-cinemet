@@ -175,10 +175,19 @@ export default function ProfilePage() {
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
-      router.push('/login')
+      await fetch('/api/auth/logout', { 
+        method: 'POST',
+        credentials: 'include'
+      })
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
+    } finally {
+      // Forcer la suppression des cookies côté client
+      document.cookie = 'sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      
+      // Toujours rediriger vers login
+      router.push('/login')
     }
   }
 

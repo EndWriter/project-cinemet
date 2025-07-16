@@ -5,39 +5,54 @@ export async function POST(request: NextRequest) {
     // récupérer les cookies de session
     const sessionCookie = request.cookies.get('sessionid')
     
-    if (!sessionCookie) {
-      return NextResponse.json(
-        { message: 'Non authentifié' },
-        { status: 401 }
-      )
-    }
-
-    // Appel vers le backend pour déconnexion
-    const response = await fetch(`${process.env.BACKEND_URL}/api/logout/`, {
-      method: 'POST',
-      headers: {
-        'Cookie': `sessionid=${sessionCookie.value}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    // Créer la réponse (lors de la déco)
+    // Créer la réponse de déconnexion
     const nextResponse = NextResponse.json({ message: 'Déconnexion réussie' })
     
-    // Supprimer le cookie sessionid
-    nextResponse.cookies.set('sessionid', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 0, // expire immediat 
-      path: '/'
+    // Supprimer TOUS les cookies d'authentification
+    const cookiesToDelete = ['sessionid', 'csrftoken']
+    
+    cookiesToDelete.forEach(cookieName => {
+      nextResponse.cookies.set(cookieName, '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 0, // expire immédiatement 
+        path: '/'
+      })
     })
+
+    // Si on a un cookie de session, essayer de déconnecter côté serveur
+    if (sessionCookie) {
+      try {
+        await fetch(`${process.env.BACKEND_URL}/api/logout/`, {
+          method: 'POST',
+          headers: {
+            'Cookie': `sessionid=${sessionCookie.value}`,
+            'Content-Type': 'application/json',
+          },
+        })
+      } catch (backendError) {
+        // Même si le backend échoue, on continue avec la déconnexion côté client
+        console.error('Erreur backend lors de la déconnexion:', backendError)
+      }
+    }
 
     return nextResponse
   } catch (error) {
-    return NextResponse.json(
-      { message: 'Erreur serveur' },
-      { status: 500 }
-    )
+    // Même en cas d'erreur, supprimer tous les cookies côté client
+    const nextResponse = NextResponse.json({ message: 'Déconnexion effectuée' })
+    
+    const cookiesToDelete = ['sessionid', 'csrftoken']
+    cookiesToDelete.forEach(cookieName => {
+      nextResponse.cookies.set(cookieName, '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 0,
+        path: '/'
+      })
+    })
+    
+    return nextResponse
   }
 }

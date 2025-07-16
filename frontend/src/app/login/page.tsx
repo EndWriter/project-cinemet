@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -98,6 +99,27 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
+
+        {/* Lien vers la page d'inscription */}
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-600" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-800 text-gray-400">Pas encore de compte ?</span>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <Link
+              href="/register"
+              className="w-full flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            >
+              Créer un compte
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )

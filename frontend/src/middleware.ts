@@ -13,18 +13,13 @@ export function middleware(request: NextRequest) {
   
   // Vérifier si l'utilisateur a un cookie de session
   const sessionCookie = request.cookies.get('sessionid')?.value
-  const csrfCookie = request.cookies.get('csrftoken')?.value
   
-  // On considère l'utilisateur connecté s'il a l'un de ces cookies
-  const isAuthenticated = !!(sessionCookie || csrfCookie)
+  const isAuthenticated = !!sessionCookie
   
   // Debug: log des cookies pour diagnostiquer
   console.log('Path:', path)
-  console.log('Cookies:', {
-    sessionid: sessionCookie,
-    csrftoken: csrfCookie,
-    isAuthenticated
-  })
+  console.log('Session cookie:', sessionCookie)
+  console.log('Is authenticated:', isAuthenticated)
   
   // Rediriger vers la page de connexion  si non connecté 
   if (isProtectedRoute && !isAuthenticated) {
