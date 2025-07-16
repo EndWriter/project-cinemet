@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Appel backend
-    const response = await fetch(`${process.env.BACKEND_URL}/api/movies/genres/`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/genres/`, {
       method: 'GET',
       headers: {
         'Cookie': `sessionid=${sessionCookie.value}`,

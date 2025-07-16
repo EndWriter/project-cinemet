@@ -6,8 +6,8 @@ from .views.movie import (
     DirectorCreateView, DirectorUpdateView, DirectorDeleteView,
     ActorCreateView, ActorUpdateView, ActorDeleteView
 )
-from .views.favorite import FavoriteListView, toggle_favorite_view, check_favorite_view
-from .views.watchlist import WatchlistListView, toggle_watchlist_view, check_watchlist_view
+from .views.favorite import FavoriteListView, toggle_favorite_view, check_favorite_view, add_favorite_view, remove_favorite_view, toggle_favorite_api_view
+from .views.watchlist import WatchlistListView, toggle_watchlist_view, check_watchlist_view, add_watchlist_view, remove_watchlist_view, toggle_watchlist_api_view
 from .views.rating import (
     rate_movie_view, get_user_rating_view, delete_rating_view, 
     get_movie_ratings_view, UserRatingsListView
@@ -34,11 +34,17 @@ urlpatterns = [
     
     # URL Favoris
     path('favorites/', FavoriteListView.as_view(), name='favorites-list'),
+    path('favorites/add/', add_favorite_view, name='add-favorite'),
+    path('favorites/remove/', remove_favorite_view, name='remove-favorite'),
+    path('favorites/toggle/', toggle_favorite_api_view, name='toggle-favorite-api'),
     path('favorites/<int:movie_id>/', toggle_favorite_view, name='toggle-favorite'),
     path('favorites/<int:movie_id>/check/', check_favorite_view, name='check-favorite'),
     
     # URL Watchlist
     path('watchlist/', WatchlistListView.as_view(), name='watchlist-list'),
+    path('watchlist/add/', add_watchlist_view, name='add-watchlist'),
+    path('watchlist/remove/', remove_watchlist_view, name='remove-watchlist'),
+    path('watchlist/toggle/', toggle_watchlist_api_view, name='toggle-watchlist-api'),
     path('watchlist/<int:movie_id>/', toggle_watchlist_view, name='toggle-watchlist'),
     path('watchlist/<int:movie_id>/check/', check_watchlist_view, name='check-watchlist'),
     

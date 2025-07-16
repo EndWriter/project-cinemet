@@ -23,14 +23,13 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // inclu les cookies
         body: JSON.stringify(formData),
       })
 
       if (response.ok) {
         const data = await response.json()
-        // Stocker le token ou les infos de session
-        localStorage.setItem('token', data.token)
-        router.push('/home')
+        window.location.href = '/home'
       } else {
         const errorData = await response.json()
         setError(errorData.message || 'Erreur de connexion')

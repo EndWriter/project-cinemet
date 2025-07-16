@@ -15,7 +15,17 @@ export async function POST(request: NextRequest) {
 
     if (response.ok) {
       const data = await response.json()
-      return NextResponse.json(data)
+      
+      // Récupérer les cookies de session du backend
+      const setCookieHeader = response.headers.get('set-cookie')
+      const nextResponse = NextResponse.json(data)
+      
+      if (setCookieHeader) {
+        // Transférer le cookie de session au frontend
+        nextResponse.headers.set('Set-Cookie', setCookieHeader)
+      }
+      
+      return nextResponse
     } else {
       const errorData = await response.json()
       return NextResponse.json(
