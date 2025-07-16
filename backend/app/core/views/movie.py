@@ -40,6 +40,28 @@ class MovieCreateView(generics.CreateAPIView):
             return Movie.objects.all()
         return Movie.objects.none()
 
+# CRUD complet pour les films (admin seulement)
+class MovieUpdateView(generics.UpdateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id_film'
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Movie.objects.all()
+        return Movie.objects.none()
+
+class MovieDeleteView(generics.DestroyAPIView):
+    queryset = Movie.objects.all()
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id_film'
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Movie.objects.all()
+        return Movie.objects.none()
+
 # Vue pour lister tous les films (gestion admin)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -78,9 +100,47 @@ class DirectorCreateView(generics.CreateAPIView):
             return Director.objects.all()
         return Director.objects.none()
 
+class DirectorUpdateView(generics.UpdateAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Director.objects.all()
+        return Director.objects.none()
+
+class DirectorDeleteView(generics.DestroyAPIView):
+    queryset = Director.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Director.objects.all()
+        return Director.objects.none()
+
 class ActorCreateView(generics.CreateAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Actor.objects.all()
+        return Actor.objects.none()
+
+class ActorUpdateView(generics.UpdateAPIView):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        if self.request.user.role and self.request.user.role.role == 'admin':
+            return Actor.objects.all()
+        return Actor.objects.none()
+
+class ActorDeleteView(generics.DestroyAPIView):
+    queryset = Actor.objects.all()
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
