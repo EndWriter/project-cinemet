@@ -12,26 +12,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Récupérer les paramètres de requête
-    const { searchParams } = new URL(request.url)
-    const params = new URLSearchParams()
-    
-    // Transférer recherche
-    searchParams.forEach((value, key) => {
-      params.set(key, value)
-    })
-
     // Appel backend
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/movies/?${params}`,
-      {
-        method: 'GET',
-        headers: {
-          'Cookie': `sessionid=${sessionCookie.value}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const response = await fetch(`${process.env.BACKEND_URL}/api/movies/genres/`, {
+      method: 'GET',
+      headers: {
+        'Cookie': `sessionid=${sessionCookie.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
 
     if (response.ok) {
       const data = await response.json()

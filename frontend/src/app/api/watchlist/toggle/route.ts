@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     // Récupérer les cookies de session
     const sessionCookie = request.cookies.get('sessionid')
@@ -12,26 +12,18 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Récupérer les paramètres de requête
-    const { searchParams } = new URL(request.url)
-    const params = new URLSearchParams()
-    
-    // Transférer recherche
-    searchParams.forEach((value, key) => {
-      params.set(key, value)
-    })
+    // Récupérer requête
+    const body = await request.json()
 
     // Appel backend
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/movies/?${params}`,
-      {
-        method: 'GET',
-        headers: {
-          'Cookie': `sessionid=${sessionCookie.value}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const response = await fetch(`${process.env.BACKEND_URL}/api/watchlist/toggle/`, {
+      method: 'POST',
+      headers: {
+        'Cookie': `sessionid=${sessionCookie.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
 
     if (response.ok) {
       const data = await response.json()
