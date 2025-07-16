@@ -157,4 +157,17 @@ CORS_ALLOWED_ORIGINS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Configuration email pour Mailpit
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailpit'  # Nom du service Docker 'Mailpit'
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+#mail par défaut pour l'envoi
+DEFAULT_FROM_EMAIL = 'noreply@cinemet.com'
+ADMIN_EMAIL = 'admin@cinemet.com'
+
 

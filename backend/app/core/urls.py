@@ -8,6 +8,11 @@ from .views.movie import (
 )
 from .views.favorite import FavoriteListView, toggle_favorite_view, check_favorite_view
 from .views.watchlist import WatchlistListView, toggle_watchlist_view, check_watchlist_view
+from .views.rating import (
+    rate_movie_view, get_user_rating_view, delete_rating_view, 
+    get_movie_ratings_view, UserRatingsListView
+)
+from .views.contact import send_contact_email, get_contact_info
 
 urlpatterns = [
     # URL User
@@ -36,6 +41,17 @@ urlpatterns = [
     path('watchlist/', WatchlistListView.as_view(), name='watchlist-list'),
     path('watchlist/<int:movie_id>/', toggle_watchlist_view, name='toggle-watchlist'),
     path('watchlist/<int:movie_id>/check/', check_watchlist_view, name='check-watchlist'),
+    
+    # URL Ratings/Notes
+    path('ratings/', UserRatingsListView.as_view(), name='user-ratings-list'),
+    path('ratings/<int:movie_id>/', rate_movie_view, name='rate-movie'),
+    path('ratings/<int:movie_id>/get/', get_user_rating_view, name='get-user-rating'),
+    path('ratings/<int:movie_id>/delete/', delete_rating_view, name='delete-rating'),
+    path('movies/<int:movie_id>/ratings/', get_movie_ratings_view, name='movie-ratings'),
+    
+    # URL Contact
+    path('contact/', send_contact_email, name='send-contact'),
+    path('contact/info/', get_contact_info, name='contact-info'),
     
     # URL Admin CRUD - Movies
     path('admin/movies/', admin_movies_view, name='admin-movies'),
