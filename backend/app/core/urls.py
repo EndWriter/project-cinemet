@@ -50,9 +50,9 @@ urlpatterns = [
     
     # URL Ratings/Notes
     path('ratings/', UserRatingsListView.as_view(), name='user-ratings-list'),
-    path('ratings/<int:movie_id>/', rate_movie_view, name='rate-movie'),
-    path('ratings/<int:movie_id>/get/', get_user_rating_view, name='get-user-rating'),
-    path('ratings/<int:movie_id>/delete/', delete_rating_view, name='delete-rating'),
+    path('ratings/rate/', rate_movie_view, name='rate-movie'),
+    path('ratings/user/', get_user_rating_view, name='get-user-rating'),
+    path('ratings/delete/', delete_rating_view, name='delete-rating'),
     path('movies/<int:movie_id>/ratings/', get_movie_ratings_view, name='movie-ratings'),
     
     # URL Contact
