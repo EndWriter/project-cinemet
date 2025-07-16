@@ -4,6 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     // Récupérer les cookies de session
     const sessionCookie = request.cookies.get('sessionid')
+    const csrfCookie = request.cookies.get('csrftoken')
     
     if (!sessionCookie) {
       return NextResponse.json(
@@ -15,12 +16,19 @@ export async function POST(request: NextRequest) {
     // Récupérer requête
     const body = await request.json()
 
+    // Construire les cookies
+    let cookieHeader = `sessionid=${sessionCookie.value}`
+    if (csrfCookie) {
+      cookieHeader += `; csrftoken=${csrfCookie.value}`
+    }
+
     // Appel backend
     const response = await fetch(`${process.env.BACKEND_URL}/api/watchlist/toggle/`, {
       method: 'POST',
       headers: {
-        'Cookie': `sessionid=${sessionCookie.value}`,
+        'Cookie': cookieHeader,
         'Content-Type': 'application/json',
+        'X-CSRFToken': csrfCookie?.value || '',
       },
       body: JSON.stringify(body),
     })

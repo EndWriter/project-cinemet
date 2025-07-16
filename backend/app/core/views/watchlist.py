@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from ..models import Watchlist, Movie
 from ..serializers import WatchlistSerializer
 
@@ -116,6 +118,7 @@ def remove_watchlist_view(request):
 
 
 # Toggle watchlist (ajouter si pas présent, retirer si présent)
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_watchlist_api_view(request):

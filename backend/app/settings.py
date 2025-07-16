@@ -151,7 +151,12 @@ REST_FRAMEWORK = {
 # Configuration CORS pour le frontend Next.js
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    # 2eme mise en route de Next
+    "http://localhost:3001",
 ]
+
+# Permettre les cookies et credentials
+CORS_ALLOW_CREDENTIALS = True
 
 # Configuration fichier media
 MEDIA_URL = '/media/'
