@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
     // Récupérer les cookies de session
     const sessionCookie = request.cookies.get('sessionid')
@@ -15,17 +12,14 @@ export async function GET(
       )
     }
 
-    // Appel backend pour récupérer les détails du film
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/movies/${params.id}/`,
-      {
-        method: 'GET',
-        headers: {
-          'Cookie': `sessionid=${sessionCookie.value}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    // Appel backend pour récupérer la watchlist de l'utilisateur
+    const response = await fetch(`${process.env.BACKEND_URL}/api/watchlist/`, {
+      method: 'GET',
+      headers: {
+        'Cookie': `sessionid=${sessionCookie.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
 
     if (response.ok) {
       const data = await response.json()

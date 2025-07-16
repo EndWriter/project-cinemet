@@ -4,25 +4,19 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 
 interface Movie {
-  id: number
+  id_film: number
   title: string
-  description: string
+  description?: string
   release_date: string
-  duration: number
-  poster_url?: string
+  duration?: number
+  main_image?: {
+    id: number
+    name: string
+    url: string
+    is_main: boolean
+    created_at: string
+  }
   average_rating?: number
-  genres: Array<{
-    id: number
-    name: string
-  }>
-  directors: Array<{
-    id: number
-    name: string
-  }>
-  actors: Array<{
-    id: number
-    name: string
-  }>
 }
 
 interface Genre {
@@ -98,10 +92,17 @@ export default function HomePage() {
       const response = await fetch('/api/movies/genres')
       if (response.ok) {
         const data = await response.json()
-        setGenres(data)
+        // Adapter le format de la réponse 
+        if (data.results && Array.isArray(data.results)) {
+          setGenres(data.results)
+        } else if (Array.isArray(data)) {
+          setGenres(data)
+        } else {
+          setGenres([])
+        }
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des genres:', error)
+      setGenres([])
     }
   }
 
@@ -197,7 +198,7 @@ export default function HomePage() {
               className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
             >
               <option value="">Tous les genres</option>
-              {genres.map((genre) => (
+              {Array.isArray(genres) && genres.map((genre) => (
                 <option key={genre.id} value={genre.id.toString()}>
                   {genre.name}
                 </option>
@@ -209,12 +210,12 @@ export default function HomePage() {
         {/* Liste des films */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
           {movies.map((movie) => (
-            <div key={movie.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              {/* Image du film (même si ya pas) */}
+            <div key={movie.id_film} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              {/* Image du film */}
               <div className="h-64 bg-gray-700 flex items-center justify-center">
-                {movie.poster_url ? (
+                {movie.main_image?.url ? (
                   <img
-                    src={movie.poster_url}
+                    src={movie.main_image.url}
                     alt={movie.title}
                     className="w-full h-full object-cover"
                   />
@@ -232,17 +233,21 @@ export default function HomePage() {
                   {movie.title}
                 </h3>
                 
-                <p className="text-gray-300 text-sm mb-3 line-clamp-3">
-                  {movie.description}
-                </p>
+                {movie.description && (
+                  <p className="text-gray-300 text-sm mb-3 line-clamp-3">
+                    {movie.description}
+                  </p>
+                )}
 
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-gray-400 text-sm">
                     {new Date(movie.release_date).getFullYear()}
                   </span>
-                  <span className="text-gray-400 text-sm">
-                    {movie.duration} min
-                  </span>
+                  {movie.duration && (
+                    <span className="text-gray-400 text-sm">
+                      {movie.duration} min
+                    </span>
+                  )}
                 </div>
 
                 {/* note moyenne */}
@@ -254,40 +259,23 @@ export default function HomePage() {
                     </span>
                   </div>
                 )}
-
-                {/* genres */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {movie.genres.slice(0, 3).map((genre) => (
-                    <span
-                      key={genre.id}
-                      className="px-2 py-1 bg-blue-600 text-white text-xs rounded"
-                    >
-                      {genre.name}
-                    </span>
-                  ))}
-                  {movie.genres.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-600 text-white text-xs rounded">
-                      +{movie.genres.length - 3}
-                    </span>
-                  )}
-                </div>
-
+                
                 {/* boutons d'action */}
                 <div className="flex gap-2">
                   <button
-                    onClick={() => router.push(`/movies/${movie.id}`)}
+                    onClick={() => router.push(`/movies/${movie.id_film}`)}
                     className="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
                   >
                     Détails
                   </button>
                   <button
-                    onClick={() => toggleFavorite(movie.id)}
+                    onClick={() => toggleFavorite(movie.id_film)}
                     className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm"
                   >
                     ❤️
                   </button>
                   <button
-                    onClick={() => toggleWatchlist(movie.id)}
+                    onClick={() => toggleWatchlist(movie.id_film)}
                     className="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
                   >
                     📝

@@ -15,9 +15,9 @@ export async function GET(
       )
     }
 
-    // Appel backend pour récupérer les détails du film
+    // Appel backend pour vérifier si le film est en favoris
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/movies/${params.id}/`,
+      `${process.env.BACKEND_URL}/api/favorites/${params.id}/check/`,
       {
         method: 'GET',
         headers: {

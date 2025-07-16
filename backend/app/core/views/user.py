@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from ..models import User, Role
 from ..serializers import UserSerializer, UserCreateSerializer
 
@@ -51,6 +53,7 @@ def logout_view(request):
 
 
 # Profil utilisateur
+@csrf_exempt # Ajout de notre Token lors de la requête
 @api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def profile_view(request):
