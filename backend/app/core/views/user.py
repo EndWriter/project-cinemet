@@ -3,6 +3,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 from ..models import User, Role
 from ..serializers import UserSerializer, UserCreateSerializer
 
@@ -23,6 +28,7 @@ class RegisterView(generics.CreateAPIView):
 # Connexion
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ensure_csrf_cookie
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
@@ -51,6 +57,7 @@ def logout_view(request):
 
 
 # Profil utilisateur
+@csrf_exempt # Ajout de notre Token lors de la requête
 @api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def profile_view(request):
@@ -98,3 +105,12 @@ def users_list_view(request):
         return Response(UserSerializer(users, many=True).data)
     return Response({'error': 'Permission refusée'}, 
                    status=status.HTTP_403_FORBIDDEN)
+
+
+# Obtenir le token CSRF
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def get_csrf_token_view(request):
+    token = get_token(request)
+    return Response({'csrfToken': token})

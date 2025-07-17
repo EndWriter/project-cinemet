@@ -1,13 +1,13 @@
 from django.urls import path
-from .views.user import RegisterView, login_view, logout_view, profile_view, users_list_view, change_password_view
+from .views.user import RegisterView, login_view, logout_view, profile_view, users_list_view, change_password_view, get_csrf_token_view
 from .views.movie import (
     MovieListView, MovieDetailView, MovieCreateView, MovieUpdateView, MovieDeleteView, admin_movies_view,
     GenreListView, DirectorListView, ActorListView,
     DirectorCreateView, DirectorUpdateView, DirectorDeleteView,
     ActorCreateView, ActorUpdateView, ActorDeleteView
 )
-from .views.favorite import FavoriteListView, toggle_favorite_view, check_favorite_view
-from .views.watchlist import WatchlistListView, toggle_watchlist_view, check_watchlist_view
+from .views.favorite import FavoriteListView, toggle_favorite_view, check_favorite_view, add_favorite_view, remove_favorite_view, toggle_favorite_api_view
+from .views.watchlist import WatchlistListView, toggle_watchlist_view, check_watchlist_view, add_watchlist_view, remove_watchlist_view, toggle_watchlist_api_view
 from .views.rating import (
     rate_movie_view, get_user_rating_view, delete_rating_view, 
     get_movie_ratings_view, UserRatingsListView
@@ -15,6 +15,9 @@ from .views.rating import (
 from .views.contact import send_contact_email, get_contact_info
 
 urlpatterns = [
+    # URL CSRF
+    path('csrf/', get_csrf_token_view, name='csrf-token'),
+    
     # URL User
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', login_view, name='login'),
@@ -34,19 +37,25 @@ urlpatterns = [
     
     # URL Favoris
     path('favorites/', FavoriteListView.as_view(), name='favorites-list'),
+    path('favorites/add/', add_favorite_view, name='add-favorite'),
+    path('favorites/remove/', remove_favorite_view, name='remove-favorite'),
+    path('favorites/toggle/', toggle_favorite_api_view, name='toggle-favorite-api'),
     path('favorites/<int:movie_id>/', toggle_favorite_view, name='toggle-favorite'),
     path('favorites/<int:movie_id>/check/', check_favorite_view, name='check-favorite'),
     
     # URL Watchlist
     path('watchlist/', WatchlistListView.as_view(), name='watchlist-list'),
+    path('watchlist/add/', add_watchlist_view, name='add-watchlist'),
+    path('watchlist/remove/', remove_watchlist_view, name='remove-watchlist'),
+    path('watchlist/toggle/', toggle_watchlist_api_view, name='toggle-watchlist-api'),
     path('watchlist/<int:movie_id>/', toggle_watchlist_view, name='toggle-watchlist'),
     path('watchlist/<int:movie_id>/check/', check_watchlist_view, name='check-watchlist'),
     
     # URL Ratings/Notes
     path('ratings/', UserRatingsListView.as_view(), name='user-ratings-list'),
-    path('ratings/<int:movie_id>/', rate_movie_view, name='rate-movie'),
-    path('ratings/<int:movie_id>/get/', get_user_rating_view, name='get-user-rating'),
-    path('ratings/<int:movie_id>/delete/', delete_rating_view, name='delete-rating'),
+    path('ratings/rate/', rate_movie_view, name='rate-movie'),
+    path('ratings/user/', get_user_rating_view, name='get-user-rating'),
+    path('ratings/delete/', delete_rating_view, name='delete-rating'),
     path('movies/<int:movie_id>/ratings/', get_movie_ratings_view, name='movie-ratings'),
     
     # URL Contact

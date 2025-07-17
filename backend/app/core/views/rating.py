@@ -9,9 +9,10 @@ from ..serializers import RatingSerializer
 
 
 # Noter un film ou modifier une note existante
-@api_view(['POST', 'PUT'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def rate_movie_view(request, movie_id):
+def rate_movie_view(request):
+    movie_id = request.data.get('movie_id')
     movie = get_object_or_404(Movie, id_film=movie_id)
     rating_value = request.data.get('rating')
     
@@ -43,7 +44,8 @@ def rate_movie_view(request, movie_id):
 # Récupérer la note d'un utilisateur pour un film
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_user_rating_view(request, movie_id):
+def get_user_rating_view(request):
+    movie_id = request.GET.get('movie_id')    
     movie = get_object_or_404(Movie, id_film=movie_id)
     
     try:
@@ -56,9 +58,10 @@ def get_user_rating_view(request, movie_id):
 
 
 # Supprimer la note d'un utilisateur pour un film
-@api_view(['DELETE'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def delete_rating_view(request, movie_id):
+def delete_rating_view(request):
+    movie_id = request.data.get('movie_id')
     movie = get_object_or_404(Movie, id_film=movie_id)
     
     try:

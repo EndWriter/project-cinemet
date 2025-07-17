@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest) {
   try {
     // Récupérer les cookies de session
     const sessionCookie = request.cookies.get('sessionid')
+    const csrfCookie = request.cookies.get('csrftoken')
     
     if (!sessionCookie) {
       return NextResponse.json(
@@ -15,17 +13,25 @@ export async function GET(
       )
     }
 
-    // Appel backend pour récupérer les détails du film
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/movies/${params.id}/`,
-      {
-        method: 'GET',
-        headers: {
-          'Cookie': `sessionid=${sessionCookie.value}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    // Récupérer requête
+    const body = await request.json()
+
+    // Construire les cookies
+    let cookieHeader = `sessionid=${sessionCookie.value}`
+    if (csrfCookie) {
+      cookieHeader += `; csrftoken=${csrfCookie.value}`
+    }
+
+    // Appel backend
+    const response = await fetch(`${process.env.BACKEND_URL}/api/watchlist/toggle/`, {
+      method: 'POST',
+      headers: {
+        'Cookie': cookieHeader,
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfCookie?.value || '',
+      },
+      body: JSON.stringify(body),
+    })
 
     if (response.ok) {
       const data = await response.json()
