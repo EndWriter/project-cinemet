@@ -1,5 +1,6 @@
 from django.urls import path
 from .views.user import RegisterView, login_view, logout_view, profile_view, users_list_view, change_password_view, get_csrf_token_view
+from .views.admin import admin_users_view, admin_user_detail_view, admin_roles_view
 from .views.movie import (
     MovieListView, MovieDetailView, MovieCreateView, MovieUpdateView, MovieDeleteView, admin_movies_view,
     GenreListView, DirectorListView, ActorListView,
@@ -61,6 +62,11 @@ urlpatterns = [
     # URL Contact
     path('contact/', send_contact_email, name='send-contact'),
     path('contact/info/', get_contact_info, name='contact-info'),
+    
+    # URL Admin CRUD - Users
+    path('admin/users/', admin_users_view, name='admin-users'),
+    path('admin/users/<int:user_id>/', admin_user_detail_view, name='admin-user-detail'),
+    path('admin/roles/', admin_roles_view, name='admin-roles'),
     
     # URL Admin CRUD - Movies
     path('admin/movies/', admin_movies_view, name='admin-movies'),
