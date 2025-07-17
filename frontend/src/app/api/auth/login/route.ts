@@ -33,22 +33,23 @@ export async function POST(request: NextRequest) {
         'Cookie': `csrftoken=${csrfCookie}`,
       },
       body: JSON.stringify({ email, password }),
+      credentials: 'include', // Important pour inclure les cookies
     })
 
     if (response.ok) {
       const data = await response.json()
       
       // Récupérer les cookies de session du backend
-      const setCookieHeader = response.headers.get('set-cookie')
+      const setCookieHeaders = response.headers.getSetCookie()
       const nextResponse = NextResponse.json(data)
       
-      if (setCookieHeader) {
-        // Transférer le cookie de session au frontend
-        const cookies = setCookieHeader.split(',').map(cookie => cookie.trim())
-        cookies.forEach(cookie => {
+      if (setCookieHeaders && setCookieHeaders.length > 0) {
+        // Transférer tous les cookies au frontend
+        setCookieHeaders.forEach(cookie => {
           nextResponse.headers.append('Set-Cookie', cookie)
         })
       }
+      
       if (csrfCookie) {
         nextResponse.headers.append('Set-Cookie', `csrftoken=${csrfCookie}; Path=/; SameSite=Lax`)
       }

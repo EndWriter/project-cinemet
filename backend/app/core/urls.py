@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.user import RegisterView, login_view, logout_view, profile_view, users_list_view, change_password_view
+from .views.user import RegisterView, login_view, logout_view, profile_view, users_list_view, change_password_view, get_csrf_token_view
 from .views.movie import (
     MovieListView, MovieDetailView, MovieCreateView, MovieUpdateView, MovieDeleteView, admin_movies_view,
     GenreListView, DirectorListView, ActorListView,
@@ -15,6 +15,9 @@ from .views.rating import (
 from .views.contact import send_contact_email, get_contact_info
 
 urlpatterns = [
+    # URL CSRF
+    path('csrf/', get_csrf_token_view, name='csrf-token'),
+    
     # URL User
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', login_view, name='login'),

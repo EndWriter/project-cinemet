@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 from ..models import User, Role
 from ..serializers import UserSerializer, UserCreateSerializer
 
@@ -27,6 +28,7 @@ class RegisterView(generics.CreateAPIView):
 # Connexion
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ensure_csrf_cookie
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')

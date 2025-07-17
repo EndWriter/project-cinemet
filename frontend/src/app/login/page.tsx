@@ -30,7 +30,10 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json()
-        window.location.href = '/home'
+        // Attendre un court moment pour que les cookies soient bien définis
+        setTimeout(() => {
+          router.push('/home')
+        }, 100)
       } else {
         const errorData = await response.json()
         setError(errorData.message || 'Erreur de connexion')
